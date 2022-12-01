@@ -2,7 +2,6 @@ const User = require("../models/userSchema")
 const bcrypt = require("bcrypt")
 const fs = require('fs')
 
-//ESTÁ GRAVANDO USERFOLDER E PROFILEPIC MESMO SEM GRAVAR USUÁRIO
 const createUser = async (req, res) => {
     try {
         const profilePic = req.file.filename
@@ -10,19 +9,13 @@ const createUser = async (req, res) => {
         req.body.password = bcrypt.hashSync(req.body.password, 10)
         const newUser = new User(req.body)
         if (!await User.findOne({email: req.body.email})) {
-
-        //REVER OPERAÇÕES EM DISCO
         fs.mkdir(`uploads/${newUser._id}`, function (error) {console.log(error)})
         fs.rename(`uploads/tmp/${profilePic}`, `uploads/${newUser._id}/${newUser._id}`, function (error) {console.log(error)})
-
         await newUser.save()
         await User.updateOne({_id: newUser._id}, {profilePic: `/media/read/${newUser._id}/${newUser._id}`})
         res.status(201).send({message: 'Usuário criado com sucesso'}) 
     } else {
-
-        //REVER OPERAÇÕES EM DISCO
         fs.unlink(`uploads/tmp/${profilePic}`, function (error) {console.log(error)})
-
         res.status(400).send({message: `Email ${newUser.email} já cadastrado`})
     }
     } catch (error) {
