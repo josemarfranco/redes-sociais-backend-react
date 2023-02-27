@@ -31,12 +31,6 @@ const checkAuth = (req, res, next) => {
             if (error) {
                 res.status(401).send({message : error.message})
             } else {
-                /*
-                * * A V I S O * *
-                GAMBIARRA INEXPLICAVELMENTE CONTUNDENTE QUE ENTRETANTO
-                FOI PRONTAMENTE SINALIZADA AQUI POR SER POTENCIALMENTE
-                INSEGURA. USE-A COM CAUTELA, PEQUENO(A) GAFANHOTO(A).
-                */
                 res.locals.user = {myId: id}
                 next()
             }
