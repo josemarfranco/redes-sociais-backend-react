@@ -1,15 +1,27 @@
-const express = require("express")
+const express = require("express");
 
-const loginController = require("../controllers/loginController")
-const userController = require("../controllers/userController")
-const fileController = require("../controllers/fileController")
+const loginController = require("../controllers/loginController");
+const userController = require("../controllers/userController");
+const fileController = require("../controllers/fileController");
 
-const router = express.Router()
+const router = express.Router();
 
-router.post("/users/create", [fileController.profilePicUpload, userController.createUser])
-router.get("/users/me", [loginController.checkAuth, userController.readUserMe])
-router.get("/users/read/:id", [loginController.checkAuth, userController.readUser])
-router.patch("/users/update/:id", [loginController.checkAuth, userController.updateUser])
-router.delete("/users/delete/:id", [loginController.checkAuth, userController.deleteUser])
+router.post("/users/create", [
+  fileController.profilePicUpload,
+  userController.createUser,
+]);
+router.get("/users/me", [loginController.checkAuth, userController.readUserMe]);
+router.get("/users/read/:id", [
+  loginController.checkAuth,
+  userController.readUser,
+]);
+router.patch("/users/update/:id", [
+  loginController.checkAuth,
+  userController.updateUser,
+]);
+router.delete("/users/delete/:id", [
+  loginController.checkAuth,
+  userController.deleteUser,
+]);
 
 module.exports = router;

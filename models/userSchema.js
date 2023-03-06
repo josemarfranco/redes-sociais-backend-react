@@ -1,50 +1,52 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   surname: {
     type: String,
-    required: true
+    required: true,
   },
   dob: {
     type: Date,
-    required: true
+    required: true,
   },
   profilePic: {
     type: String,
-    required: true
+    required: true,
   },
   bio: {
-    type: String
+    type: String,
   },
   registerDate: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
-  friends: [{
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "User"
-  }]
-})
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+});
 
-userSchema.virtual('posts', {
+userSchema.virtual("posts", {
   ref: "Post",
-  localField: '_id',
-  foreignField: 'parentId'
-})
+  localField: "_id",
+  foreignField: "parentId",
+});
 
 const User = mongoose.model("User", userSchema);
 
-module.exports = User
+module.exports = User;

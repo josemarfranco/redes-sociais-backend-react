@@ -1,9 +1,9 @@
-const express = require("express")
+const express = require("express");
 
-const fileController = require("../controllers/fileController")
+const fileController = require("../controllers/fileController");
 
-const router = express.Router()
+const router = express.Router();
 
-router.get("/media/read/:id/:file", fileController.getFile)
+router.get("/media/read/:id/:file", fileController.getFile);
 
 module.exports = router;
