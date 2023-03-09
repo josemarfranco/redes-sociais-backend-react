@@ -1,13 +1,28 @@
 const Post = require("../models/postSchema");
+const fs = require("fs");
 
 const createPost = async (req, res) => {
-  try {
-    req.body.parentId = res.locals.user.myId;
+  if (req.body.content) {
     const newPost = new Post(req.body);
-    await newPost.save();
-    res.status(201).send(newPost);
-  } catch (error) {
-    res.status(500).send({ message: error.message });
+    newPost.parentId = res.locals.user.myId;
+    //TESTE
+    console.log(req.file, req.body);
+    if (req.file) {
+      fs.renameSync(
+        `uploads/tmp/${req.file.filename}`,
+        `uploads/${newPost.parentId}/${req.file.filename}`
+      );
+    }
+    newPost.save(function (err, cb) {
+      if (!err) {
+        console.log(newPost);
+        res.status(201).send({ message: "OK" });
+      } else {
+        res.status(500).send({ message: cb });
+      }
+    });
+  } else {
+    res.status(500).send({ message: "Post em branco" });
   }
 };
 

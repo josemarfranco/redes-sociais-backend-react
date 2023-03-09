@@ -3,38 +3,35 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 
 const createUser = async (req, res) => {
-  try {
-    const profilePic = req.file.filename;
-    req.body.profilePic = profilePic;
-    req.body.password = bcrypt.hashSync(req.body.password, 10);
+  if (
+    req.body.email &&
+    req.body.name &&
+    req.body.surname &&
+    req.body.dob &&
+    req.body.password &&
+    req.body.password === req.body.passwordConf
+  ) {
     const newUser = new User(req.body);
-    if (!(await User.findOne({ email: req.body.email }))) {
-      fs.mkdir(`uploads/${newUser._id}`, function (error) {
-        console.log(error);
-      });
-      fs.rename(
-        `uploads/tmp/${profilePic}`,
-        `uploads/${newUser._id}/${newUser._id}`,
-        function (error) {
-          console.log(error);
-        }
+    fs.mkdirSync(`uploads/${newUser._id}`);
+    newUser.password = bcrypt.hashSync(req.body.password, 10);
+    if (req.file) {
+      newUser.profilePic = `/media/read/${newUser._id}/${newUser._id}`;
+      fs.renameSync(
+        `uploads/tmp/${req.file.filename}`,
+        `uploads/${newUser._id}/${newUser._id}`
       );
-      await newUser.save();
-      await User.updateOne(
-        { _id: newUser._id },
-        { profilePic: `/media/read/${newUser._id}/${newUser._id}` }
-      );
-      res.status(201).send({ message: "Usuário criado com sucesso" });
     } else {
-      fs.unlink(`uploads/tmp/${profilePic}`, function (error) {
-        console.log(error);
-      });
-      res.status(400).send({ message: `Email ${newUser.email} já cadastrado` });
+      newUser.profilePic = "media/default.png";
     }
-  } catch (error) {
-    res.status(400).send({
-      message: error.message,
+    newUser.save(function (err, cb) {
+      if (!err) {
+        res.status(201).send({ message: "OK" });
+      } else {
+        res.status(500).send({ message: cb });
+      }
     });
+  } else {
+    res.status(500).send({ message: "Campo(s) vazio(s) ou senhas não conferem" });
   }
 };
 

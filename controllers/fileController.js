@@ -4,6 +4,8 @@ const path = require("path");
 
 const profilePicUpload = upload.single("profilePic");
 
+const picUpload = upload.single("pic");
+
 const getFile = (req, res) => {
   try {
     const id = req.params.id;
@@ -19,5 +21,6 @@ const getFile = (req, res) => {
 
 module.exports = {
   profilePicUpload,
+  picUpload,
   getFile,
 };
