@@ -9,5 +9,6 @@ router.post("/media/post", [
   fileController.picUpload,
   fileController.picturePreview,
 ]);
+router.delete("/media/remove/:id", fileController.removeFromTemp);
 
 module.exports = router;

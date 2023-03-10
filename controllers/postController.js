@@ -2,18 +2,17 @@ const Post = require("../models/postSchema");
 const fs = require("fs");
 
 const createPost = async (req, res) => {
-  if (req.body) {
+  console.log(req.body);
+  if (req.body.image) {
     const newPost = new Post(req.body);
     newPost.parentId = res.locals.user.myId;
-    if (req.file) {
-      fs.renameSync(
-        req.body.image,
-        `uploads/${newPost.parentId}/${OOOOOOXI}`
-      );
+    if (req.body.image) {
+      let imagePath = `uploads/${newPost.parentId}/${req.body.fileName}`;
+      fs.renameSync(req.body.image, imagePath);
+      newPost.image = imagePath;
     }
     newPost.save(function (err, cb) {
       if (!err) {
-        console.log(newPost);
         res.status(201).send({ message: "OK" });
       } else {
         res.status(500).send({ message: cb });
