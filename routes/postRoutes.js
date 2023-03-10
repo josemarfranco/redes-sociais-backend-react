@@ -2,13 +2,11 @@ const express = require("express");
 
 const loginController = require("../controllers/loginController");
 const postController = require("../controllers/postController");
-const fileController = require("../controllers/fileController");
 
 const router = express.Router();
 
 router.post("/posts/create", [
   loginController.checkAuth,
-  fileController.picUpload,
   postController.createPost,
 ]);
 router.get("/posts/read/:id", [

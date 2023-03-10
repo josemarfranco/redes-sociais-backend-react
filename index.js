@@ -19,6 +19,9 @@ mongoose
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use("/", express.static("views"));
+app.use("/uploads", express.static("uploads"));
+
 app.use(require("./routes/loginRoutes"));
 app.use(require("./routes/userRoutes"));
 app.use(require("./routes/postRoutes"));

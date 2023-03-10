@@ -19,8 +19,15 @@ const getFile = (req, res) => {
   }
 };
 
+const picturePreview = (req, res) => {
+  res.status(200).send({
+    filePath: req.file.path,
+  });
+};
+
 module.exports = {
   profilePicUpload,
   picUpload,
   getFile,
+  picturePreview,
 };
