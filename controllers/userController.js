@@ -14,15 +14,11 @@ const createUser = async (req, res) => {
     const newUser = new User(req.body);
     fs.mkdirSync(`uploads/${newUser._id}`);
     newUser.password = bcrypt.hashSync(req.body.password, 10);
-    if (req.file) {
-      newUser.profilePic = `/media/read/${newUser._id}/${newUser._id}`;
-      fs.renameSync(
-        `uploads/tmp/${req.file.filename}`,
-        `uploads/${newUser._id}/${newUser._id}`
-      );
-    } else {
-      newUser.profilePic = "media/default.png";
-    }
+    newUser.profilePic = `/media/read/${newUser._id}/${newUser._id}`;
+    fs.renameSync(
+      `uploads/tmp/${req.body.fileName}`,
+      `uploads/${newUser._id}/${newUser._id}`
+    );
     newUser.save(function (err, cb) {
       if (!err) {
         res.status(201).send({ message: "OK" });
@@ -31,7 +27,9 @@ const createUser = async (req, res) => {
       }
     });
   } else {
-    res.status(500).send({ message: "Campo(s) vazio(s) ou senhas não conferem" });
+    res
+      .status(500)
+      .send({ message: "Campo(s) vazio(s) ou senhas não conferem" });
   }
 };
 
