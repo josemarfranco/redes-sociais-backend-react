@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.bdbefc38.css",
+    "main.js": "/static/js/main.ff77dea0.js",
+    "static/media/Nismo.jpg": "/static/media/Nismo.fa402eb5727657737ddb.jpg",
+    "static/media/Masquerade.jpg": "/static/media/Masquerade.84603201c0c4b5b31436.jpg",
+    "static/media/Asian.jpg": "/static/media/Asian.fe5c5d20c5e753a5e6e5.jpg",
+    "static/media/BreathnSmile.jpg": "/static/media/BreathnSmile.1dd29205899f60a3112e.jpg",
+    "static/media/OriginalSin.jpg": "/static/media/OriginalSin.14ff2daf63e2ceca7a08.jpg",
+    "static/media/Cabana.jpg": "/static/media/Cabana.cee41e9f99a1c1a2b506.jpg",
+    "static/media/OpenSans-Light.ttf": "/static/media/OpenSans-Light.55d5015c3ced03510e63.ttf",
+    "static/media/Frozen.jpg": "/static/media/Frozen.1a0e2e1bdf8f788c50eb.jpg",
+    "static/media/Penhasco.jpg": "/static/media/Penhasco.0bdfbf25980601e3ded6.jpg",
+    "static/media/Bliss.jpg": "/static/media/Bliss.c79179357b8497336c44.jpg",
+    "static/media/logo.jpg": "/static/media/logo.046026c3a8c80ee96329.jpg",
+    "static/media/default.png": "/static/media/default.94cf75318aecf58fec8e.png",
+    "static/media/alphalogo.png": "/static/media/alphalogo.2e27dff07bc7ea036fc1.png",
+    "index.html": "/index.html",
+    "main.bdbefc38.css.map": "/static/css/main.bdbefc38.css.map",
+    "main.ff77dea0.js.map": "/static/js/main.ff77dea0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bdbefc38.css",
+    "static/js/main.ff77dea0.js"
+  ]
+}
