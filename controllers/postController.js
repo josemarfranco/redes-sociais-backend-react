@@ -2,8 +2,7 @@ const Post = require("../models/postSchema");
 const fs = require("fs");
 
 const createPost = async (req, res) => {
-  console.log(req.body);
-  if (req.body.image) {
+  if (req.body) {
     const newPost = new Post(req.body);
     newPost.parentId = res.locals.user.myId;
     if (req.body.image) {
@@ -61,27 +60,3 @@ module.exports = {
   updatePost,
   deletePost,
 };
-
-/*
-  if (req.body) {
-    const newPost = new Post(req.body);
-    newPost.parentId = res.locals.user.myId;
-    if (req.file) {
-      fs.renameSync(
-        `uploads/tmp/${req.file.filename}`,
-        `uploads/${newPost.parentId}/${req.file.filename}`
-      );
-    }
-    newPost.save(function (err, cb) {
-      if (!err) {
-        console.log(newPost);
-        res.status(201).send({ message: "OK" });
-      } else {
-        res.status(500).send({ message: cb });
-      }
-    });
-  } else {
-    res.status(500).send({ message: "Post em branco" });
-  }
-};
-*/
