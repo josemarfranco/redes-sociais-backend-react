@@ -1,7 +1,21 @@
 const multer = require("multer");
-const upload = multer({ dest: "uploads/tmp/" });
 const path = require("path");
 const fs = require("fs");
+
+const upload = multer({
+  limits: { fileSize: 5000000 },
+  fileFilter: function (req, file, cb) {
+    let fileExtension = file.originalname
+      .split(".")
+      [file.originalname.split(".").length - 1].toLowerCase();
+    if (["png", "jpg", "jpeg"].indexOf(fileExtension) === -1) {
+      cb("INVALIDO", false);
+    } else {
+      cb(null, true);
+    }
+  },
+  dest: "uploads/tmp/",
+});
 
 const profilePicUpload = upload.single("profilePic");
 
