@@ -1,6 +1,7 @@
 const User = require("../models/userSchema");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
+const sharp = require("sharp");
 
 const createUser = async (req, res) => {
   if (
@@ -12,24 +13,31 @@ const createUser = async (req, res) => {
     req.body.password === req.body.passwordConf
   ) {
     const newUser = new User(req.body);
-    fs.mkdirSync(`uploads/${newUser._id}`);
+    const newUserFolder = `uploads/${newUser._id}`;
     newUser.password = bcrypt.hashSync(req.body.password, 10);
-    newUser.profilePic = `/media/read/${newUser._id}/${newUser._id}`;
-    fs.renameSync(
-      `uploads/tmp/${req.body.fileName}`,
-      `uploads/${newUser._id}/${newUser._id}`
-    );
-    newUser.save(function (err, cb) {
+    fs.mkdirSync(newUserFolder);
+    if (fs.existsSync(req.body.profilePic)) {
+      const imagePath = `uploads/${newUser._id}/${newUser._id}`;
+      sharp(req.body.profilePic)
+        .resize(500, 500)
+        .withMetadata()
+        .toFile(imagePath);
+      newUser.profilePic = `/media/read/${newUser._id}/${newUser._id}`;
+    } else {
+      newUser.profilePic = "";
+    }
+    newUser.save(function (err) {
       if (!err) {
         res.status(201).send({ message: "OK" });
       } else {
-        res.status(500).send({ message: cb });
+        fs.rmSync(newUserFolder, { recursive: true });
+        res.status(500).send({ message: "Usuário já existente" });
       }
     });
   } else {
-    res
-      .status(500)
-      .send({ message: "Campo(s) vazio(s) ou senhas não conferem" });
+    res.status(500).send({
+      message: "Campo(s) vazio(s) ou senhas não conferem",
+    });
   }
 };
 
