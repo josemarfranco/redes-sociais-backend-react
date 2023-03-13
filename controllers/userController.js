@@ -18,6 +18,7 @@ const createUser = async (req, res) => {
     fs.mkdirSync(newUserFolder);
     if (fs.existsSync(req.body.profilePic)) {
       const imagePath = `uploads/${newUser._id}/${newUser._id}`;
+      sharp.cache(false);
       sharp(req.body.profilePic)
         .resize(500, 500)
         .withMetadata()

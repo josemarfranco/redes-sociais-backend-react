@@ -8,7 +8,6 @@ const createPost = async (req, res) => {
     newPost.parentId = res.locals.user.myId;
     if (fs.existsSync(req.body.image)) {
       const imagePath = `uploads/${newPost.parentId}/${req.body.fileName}`;
-      console.log(req.body.image);
       sharp.cache(false);
       sharp(req.body.image).resize(500, 500).withMetadata().toFile(imagePath);
       newPost.image = imagePath;
