@@ -9,13 +9,9 @@ router.post("/posts/create", [
   loginController.checkAuth,
   postController.createPost,
 ]);
-router.get("/posts/read/:id", [
+router.post("/posts/createAnswer/:id", [
   loginController.checkAuth,
-  postController.readPost,
-]);
-router.patch("/posts/update/:id", [
-  loginController.checkAuth,
-  postController.updatePost,
+  postController.createAnswerPost,
 ]);
 router.delete("/posts/delete/:id", [
   loginController.checkAuth,

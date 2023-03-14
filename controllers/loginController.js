@@ -43,19 +43,7 @@ const checkAuth = (req, res, next) => {
   }
 };
 
-const routeProtector = (req, res) => {
-  const webtoken = req.get("Authorization").substring(7);
-  jwt.verify(webtoken, SECRET, function (err) {
-    if (err) {
-      res.status(401).send({ status: "ERR" });
-    } else {
-      res.status(200).send({ status: "OK" });
-    }
-  });
-};
-
 module.exports = {
   login,
   checkAuth,
-  routeProtector,
 };
