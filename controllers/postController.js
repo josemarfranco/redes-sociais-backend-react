@@ -4,7 +4,7 @@ const fs = require("fs");
 const sharp = require("sharp");
 
 const createPost = async (req, res) => {
-  if (req.body) {
+  if (req.body.content || req.body.image) {
     const newPost = new Post(req.body);
     newPost.parentId = res.locals.user.myId;
     if (fs.existsSync(req.body.image)) {
@@ -28,7 +28,7 @@ const createPost = async (req, res) => {
 };
 
 const createAnswerPost = async (req, res) => {
-  if (req.body) {
+  if (req.body.content) {
     const newAnswerPost = new answerPost(req.body);
     newAnswerPost.parentPostId = req.params.id;
     newAnswerPost.save(function (err, cb) {

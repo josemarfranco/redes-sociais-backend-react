@@ -5,6 +5,12 @@ const answerPostSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Post",
   },
+  profilePic: {
+    type: String,
+  },
+  name: {
+    type: String,
+  },
   content: {
     type: String,
     required: true,

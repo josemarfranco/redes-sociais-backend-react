@@ -12,7 +12,7 @@ const generalFeed = async (req, res) => {
       },
       {
         $addFields: {
-          feedIds: {
+          friends: {
             $concatArrays: ["$friends", [mongoose.Types.ObjectId(myId)]],
           },
         },
@@ -20,55 +20,77 @@ const generalFeed = async (req, res) => {
       {
         $lookup: {
           from: "users",
-          localField: "feedIds",
+          localField: "friends",
           foreignField: "_id",
-          as: "feedIds",
+          as: "friends",
         },
       },
       {
         $unwind: {
-          path: "$feedIds",
+          path: "$friends",
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
           from: "posts",
-          localField: "feedIds._id",
+          localField: "friends._id",
           foreignField: "parentId",
-          as: "feedIds.posts",
+          as: "friends.posts",
         },
       },
       {
         $unwind: {
-          path: "$feedIds.posts",
+          path: "$friends.posts",
           preserveNullAndEmptyArrays: true,
         },
       },
       {
-        $addFields: {
-          _id: "$feedIds.posts._id",
-          name: "$feedIds.name",
-          profilePic: "$feedIds.profilePic",
-          image: "$feedIds.posts.image",
-          content: "$feedIds.posts.content",
-          date: "$feedIds.posts.date",
+        $lookup: {
+          from: "answerposts",
+          localField: "friends.posts._id",
+          foreignField: "parentPostId",
+          as: "friends.posts.answerPosts",
         },
       },
       {
-        $project: {
-          _id: 1,
-          name: 1,
-          profilePic: 1,
-          image: 1,
-          content: 1,
-          date: 1,
+        $unwind: {
+          path: "$friends.posts.answerPosts",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $sort: {
+          "friends.posts.answerPosts.date": -1,
+        },
+      },
+      {
+        $group: {
+          _id: "$friends.posts._id",
+          name: {
+            $first: "$friends.name",
+          },
+          profilePic: {
+            $first: "$friends.profilePic",
+          },
+          image: {
+            $first: "$friends.posts.image",
+          },
+          content: {
+            $first: "$friends.posts.content",
+          },
+          date: {
+            $first: "$friends.posts.date",
+          },
+          answerPosts: {
+            $push: "$friends.posts.answerPosts",
+          },
         },
       },
       {
         $match: {
           _id: {
-            $exists: true,
+            $ne: null,
           },
         },
       },
