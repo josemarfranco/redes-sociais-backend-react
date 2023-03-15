@@ -56,7 +56,7 @@ const readCurrentUser = async (req, res) => {
       postsLen: myUserInfo.posts.length,
     });
   } catch (error) {
-    res.status(50).send({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 };
 
