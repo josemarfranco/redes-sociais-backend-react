@@ -42,51 +42,48 @@ const createUser = async (req, res) => {
   }
 };
 
-const readUserMe = async (req, res) => {
+const readCurrentUser = async (req, res) => {
   try {
     const myId = res.locals.user.myId;
-    const myUserInfo = await User.findById(myId);
+    const myUserInfo = await User.findById(myId).populate("posts");
     res.status(200).send({
       id: myUserInfo._id,
       name: myUserInfo.name,
       surname: myUserInfo.surname,
       profilePic: myUserInfo.profilePic,
+      friends: myUserInfo.friends,
+      friendsLen: myUserInfo.friends.length,
+      postsLen: myUserInfo.posts.length,
     });
   } catch (error) {
     res.status(50).send({ message: error.message });
   }
 };
 
-const readUser = async (req, res) => {
+const readAnyUser = async (req, res) => {
   try {
     const id = req.params.id;
     const userById = await User.findOne({ _id: id });
-    res.status(200).send(userById);
+    res.status(200).send({
+      id: userById._id,
+      name: userById.name,
+      surname: userById.surname,
+      profilePic: userById.profilePic,
+      friends: userById.friends,
+    });
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
 };
 
 const updateUser = async (req, res) => {
-  const hashedPassword = bcrypt.hashSync(req.body.password, 10);
-  req.body.password = hashedPassword;
-  User.findByIdAndUpdate(
-    req.params.id,
-    {
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-    },
-    function (error, user) {
-      if (error) {
-        res.status(400).send({ message: error.message });
-      } else {
-        res
-          .status(200)
-          .send({ message: "Usuário atualizado com sucesso", user });
-      }
+  User.findByIdAndUpdate(req.params.id, req.body, function (err, cb) {
+    if (err) {
+      res.status(400).send({ message: err.message });
+    } else {
+      res.status(200).send({ message: cb });
     }
-  );
+  });
 };
 
 const deleteUser = async (req, res) => {
@@ -105,8 +102,8 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   createUser,
-  readUserMe,
-  readUser,
+  readCurrentUser,
+  readAnyUser,
   updateUser,
   deleteUser,
 };

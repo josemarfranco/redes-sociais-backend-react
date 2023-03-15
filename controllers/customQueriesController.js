@@ -197,14 +197,22 @@ const anyUserFeed = async (req, res) => {
 };
 
 const peopleCardSuggestion = async (req, res) => {
+  const myId = res.locals.user.myId;
   try {
     const query = await User.aggregate([
       {
+        $match: {
+          _id: {
+            $ne: mongoose.Types.ObjectId(myId),
+          },
+        },
+      },
+      {
         $project: {
+          _id: 1,
           name: 1,
           surname: 1,
           profilePic: 1,
-          bio: 1,
         },
       },
     ]);

@@ -10,10 +10,13 @@ router.post("/users/create", [
   fileController.profilePicUpload,
   userController.createUser,
 ]);
-router.get("/users/me", [loginController.checkAuth, userController.readUserMe]);
+router.get("/users/me", [
+  loginController.checkAuth,
+  userController.readCurrentUser,
+]);
 router.get("/users/read/:id", [
   loginController.checkAuth,
-  userController.readUser,
+  userController.readAnyUser,
 ]);
 router.patch("/users/update/:id", [
   loginController.checkAuth,
