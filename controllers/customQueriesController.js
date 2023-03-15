@@ -67,6 +67,9 @@ const generalFeed = async (req, res) => {
       {
         $group: {
           _id: "$friends.posts._id",
+          parentId: {
+            $first: "$friends._id",
+          },
           name: {
             $first: "$friends.name",
           },
@@ -106,15 +109,88 @@ const generalFeed = async (req, res) => {
   }
 };
 
-const feedByUserId = async (req, res) => {
+const anyUserFeed = async (req, res) => {
   try {
-    const id = req.params.id;
-    const query = await User.findById(id).populate("posts");
-    res.status(200).send({
-      name: query.name,
-      profilePic: query.profilePic,
-      posts: query.posts,
-    });
+    const anyUserId = req.params.id;
+    const query = await User.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(anyUserId),
+        },
+      },
+      {
+        $lookup: {
+          from: "posts",
+          localField: "_id",
+          foreignField: "parentId",
+          as: "posts",
+        },
+      },
+      {
+        $unwind: {
+          path: "$posts",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "answerposts",
+          localField: "posts._id",
+          foreignField: "parentPostId",
+          as: "posts.answerPosts",
+        },
+      },
+      {
+        $sort: {
+          "posts.answerPosts.date": -1,
+        },
+      },
+      {
+        $group: {
+          _id: "$posts._id",
+          parentId: {
+            $first: "$_id",
+          },
+          name: {
+            $first: "$name",
+          },
+          profilePic: {
+            $first: "$profilePic",
+          },
+          image: {
+            $first: "$posts.image",
+          },
+          content: {
+            $first: "$posts.content",
+          },
+          date: {
+            $first: "$posts.date",
+          },
+          answerPosts: {
+            $push: "$posts.answerPosts",
+          },
+        },
+      },
+      {
+        $unwind: {
+          path: "$answerPosts",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $match: {
+          _id: {
+            $ne: null,
+          },
+        },
+      },
+      {
+        $sort: {
+          date: -1,
+        },
+      },
+    ]);
+    res.status(200).send(query);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
@@ -140,6 +216,6 @@ const peopleCardSuggestion = async (req, res) => {
 
 module.exports = {
   generalFeed,
-  feedByUserId,
+  anyUserFeed,
   peopleCardSuggestion,
 };

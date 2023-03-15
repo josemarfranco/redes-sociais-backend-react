@@ -9,9 +9,9 @@ router.get("/queries/generalfeed", [
   loginController.checkAuth,
   customQueriesController.generalFeed,
 ]);
-router.get("/queries/feed/:id", [
+router.get("/queries/anyuserfeed/:id", [
   loginController.checkAuth,
-  customQueriesController.feedByUserId,
+  customQueriesController.anyUserFeed,
 ]);
 router.get("/queries/peoplecards", [
   loginController.checkAuth,
