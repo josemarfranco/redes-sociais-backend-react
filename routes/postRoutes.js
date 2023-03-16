@@ -13,9 +13,5 @@ router.post("/posts/createAnswer/:id", [
   loginController.checkAuth,
   postController.createAnswerPost,
 ]);
-router.delete("/posts/delete/:id", [
-  loginController.checkAuth,
-  postController.deletePost,
-]);
 
 module.exports = router;

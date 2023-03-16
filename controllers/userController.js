@@ -6,10 +6,15 @@ const sharp = require("sharp");
 const createUser = async (req, res) => {
   if (
     req.body.email &&
+    req.body.email.length <= 100 &&
     req.body.name &&
+    req.body.name.length <= 30 &&
     req.body.surname &&
+    req.body.surname.length <= 30 &&
     req.body.dob &&
     req.body.password &&
+    req.body.password.length <= 100 &&
+    req.body.passwordConf.length <= 100 &&
     req.body.password === req.body.passwordConf
   ) {
     const newUser = new User(req.body);
@@ -86,24 +91,9 @@ const updateUser = async (req, res) => {
   });
 };
 
-const deleteUser = async (req, res) => {
-  User.findByIdAndDelete(req.params.id, function (error, user) {
-    if (error) {
-      res.status(400).send({
-        message: error.message,
-      });
-    } else if (user !== null) {
-      res.status(200).send({ message: "Usuário removido com sucesso" });
-    } else {
-      res.status(400).send({ message: "Usuário inexistente" });
-    }
-  });
-};
-
 module.exports = {
   createUser,
   readCurrentUser,
   readAnyUser,
   updateUser,
-  deleteUser,
 };

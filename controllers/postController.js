@@ -2,16 +2,20 @@ const Post = require("../models/postSchema");
 const answerPost = require("../models/answerPostSchema");
 const fs = require("fs");
 const sharp = require("sharp");
+const maxLength = 300;
 
 const createPost = async (req, res) => {
-  if (req.body.content || req.body.image) {
+  if (
+    (req.body.content && req.body.content.length <= maxLength) ||
+    (req.body.image && req.body.content.length <= maxLength)
+  ) {
     const newPost = new Post(req.body);
     newPost.parentId = res.locals.user.myId;
     if (fs.existsSync(req.body.image)) {
       const imagePath = `uploads/${newPost.parentId}/${req.body.fileName}`;
       sharp.cache(false);
       sharp(req.body.image).resize(500, 500).withMetadata().toFile(imagePath);
-      newPost.image = imagePath;
+      newPost.image = `media/read/${newPost.parentId}/${req.body.fileName}`;
     } else {
       newPost.image = "";
     }
@@ -28,7 +32,7 @@ const createPost = async (req, res) => {
 };
 
 const createAnswerPost = async (req, res) => {
-  if (req.body.content) {
+  if (req.body.content && req.body.content.length <= maxLength) {
     const newAnswerPost = new answerPost(req.body);
     newAnswerPost.parentPostId = req.params.id;
     newAnswerPost.save(function (err, cb) {
@@ -39,24 +43,11 @@ const createAnswerPost = async (req, res) => {
       }
     });
   } else {
-    res.status(500).send({ message: "Post em branco" });
+    res.status(500).send({ message: "Resposta em branco" });
   }
-};
-
-const deletePost = async (req, res) => {
-  Post.findByIdAndDelete(req.params.id, function (error, post) {
-    if (error) {
-      res.status(400).send({ message: error.message });
-    } else if (post !== null) {
-      res.status(200).send({ message: "Post removido com sucesso" });
-    } else {
-      res.status(400).send({ message: "Post inexistente" });
-    }
-  });
 };
 
 module.exports = {
   createPost,
   createAnswerPost,
-  deletePost,
 };

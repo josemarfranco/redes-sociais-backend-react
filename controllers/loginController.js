@@ -20,9 +20,9 @@ const login = async (req, res) => {
         message: "Usuário ou senha inválidos",
       });
     }
-  } catch (error) {
+  } catch (err) {
     res.status(400).send({
-      message: error.message,
+      message: err.message,
     });
   }
 };

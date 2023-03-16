@@ -61,7 +61,7 @@ const generalFeed = async (req, res) => {
       },
       {
         $sort: {
-          "friends.posts.answerPosts.date": -1,
+          "friends.posts.answerPosts.date": 1,
         },
       },
       {

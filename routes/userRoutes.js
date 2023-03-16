@@ -22,9 +22,5 @@ router.patch("/users/update/:id", [
   loginController.checkAuth,
   userController.updateUser,
 ]);
-router.delete("/users/delete/:id", [
-  loginController.checkAuth,
-  userController.deleteUser,
-]);
 
 module.exports = router;
