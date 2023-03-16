@@ -47,7 +47,18 @@ const createAnswerPost = async (req, res) => {
   }
 };
 
+const removePost = async (req, res) => {
+  Post.findByIdAndDelete(req.params.id, function (err, cb) {
+    if (!err) {
+      res.status(200).send({ message: "OK" });
+    } else {
+      res.status(500).send({ message: cb });
+    }
+  });
+};
+
 module.exports = {
   createPost,
   createAnswerPost,
+  removePost,
 };
